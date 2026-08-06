@@ -1,14 +1,14 @@
+from collections.abc import Iterable
 from pathlib import Path
 
 from wordle.text import normalizar, validar_caracteres
 
-def cargar_palabras(ruta: str | Path) -> list[str]:
-    contenido = Path(ruta).read_text(encoding="utf-8")
+def preparar_palabras(candidatas: Iterable[str]) -> list[str]:
     palabras = []
     palabras_vistas = set()
 
-    for linea in contenido.splitlines():
-        palabra = normalizar(linea.strip())
+    for candidata in candidatas:
+        palabra = normalizar(candidata.strip())
 
         if len(palabra) != 5:
             continue
@@ -25,3 +25,9 @@ def cargar_palabras(ruta: str | Path) -> list[str]:
         palabras_vistas.add(palabra)
 
     return palabras
+
+
+def cargar_palabras(ruta: str | Path) -> list[str]:
+    contenido = Path(ruta).read_text(encoding="utf-8")
+
+    return preparar_palabras(contenido.splitlines())
