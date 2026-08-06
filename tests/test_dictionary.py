@@ -11,7 +11,7 @@ def test_carga_palabras_unicas(tmp_path):
 
     resultado = cargar_palabras(archivo)
 
-    assert resultado == {"PANDA", "PLUMA"}
+    assert resultado == ["PANDA", "PLUMA"]
 
 def test_normaliza_y_filtra_palabras_no_utilizables(tmp_path):
     archivo = tmp_path / "palabras.txt"
@@ -28,4 +28,4 @@ def test_normaliza_y_filtra_palabras_no_utilizables(tmp_path):
 
     resultado = cargar_palabras(archivo)
 
-    assert resultado == {"PANDA", "ARBOL"}
+    assert resultado == ["PANDA", "ARBOL"]

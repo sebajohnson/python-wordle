@@ -2,9 +2,10 @@ from pathlib import Path
 
 from wordle.text import normalizar, validar_caracteres
 
-def cargar_palabras(ruta: str | Path) -> set[str]:
+def cargar_palabras(ruta: str | Path) -> list[str]:
     contenido = Path(ruta).read_text(encoding="utf-8")
-    palabras = set()
+    palabras = []
+    palabras_vistas = set()
 
     for linea in contenido.splitlines():
         palabra = normalizar(linea.strip())
@@ -17,6 +18,10 @@ def cargar_palabras(ruta: str | Path) -> set[str]:
         except ValueError:
             continue
 
-        palabras.add(palabra)
+        if palabra in palabras_vistas:
+            continue
+
+        palabras.append(palabra)
+        palabras_vistas.add(palabra)
 
     return palabras
