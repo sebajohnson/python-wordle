@@ -4,11 +4,18 @@ from pathlib import Path
 from wordfreq import top_n_list
 
 from wordle.dictionary import preparar_palabras
+from wordle.text import ALFABETOS, IDIOMA_PREDETERMINADO
 
 
 def main() -> None:
     parser = ArgumentParser(
-        description="Genera el diccionario español para Wordle."
+        description="Genera un diccionario para Wordle."
+    )
+    parser.add_argument(
+        "--idioma",
+        choices=sorted(ALFABETOS),
+        default=IDIOMA_PREDETERMINADO,
+        help="Idioma del diccionario.",
     )
     parser.add_argument(
         "--limite",
@@ -19,27 +26,42 @@ def main() -> None:
     parser.add_argument(
         "--salida",
         type=Path,
-        default=Path("data/palabras.txt"),
-        help="Archivo donde se guardará el diccionario.",
+        default=None,
+        help="Archivo de salida opcional.",
     )
 
     argumentos = parser.parse_args()
 
-    candidatas = top_n_list("es", argumentos.limite)
-    palabras = preparar_palabras(candidatas)
+    salida = argumentos.salida
 
-    argumentos.salida.parent.mkdir(
+    if salida is None:
+        salida = (
+            Path("data")
+            / argumentos.idioma
+            / "palabras.txt"
+        )
+
+    candidatas = top_n_list(
+        argumentos.idioma,
+        argumentos.limite,
+    )
+    palabras = preparar_palabras(
+        candidatas,
+        idioma=argumentos.idioma,
+    )
+
+    salida.parent.mkdir(
         parents=True,
         exist_ok=True,
     )
-    argumentos.salida.write_text(
+    salida.write_text(
         "\n".join(palabras) + "\n",
         encoding="utf-8",
     )
 
     print(
-        f"Diccionario generado: {len(palabras)} palabras "
-        f"en {argumentos.salida}"
+        f"Diccionario '{argumentos.idioma}' generado: "
+        f"{len(palabras)} palabras en {salida}"
     )
 
 
