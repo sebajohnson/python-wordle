@@ -1,6 +1,21 @@
-from wordle.dictionary import cargar_palabras
+from wordle.dictionary import cargar_palabras, preparar_palabras
 
 
+def test_prepara_palabras_segun_el_idioma():
+    candidatas = ["house", "niños"]
+
+    resultado_ingles = preparar_palabras(
+        candidatas,
+        idioma="en",
+    )
+    resultado_espanol = preparar_palabras(
+        candidatas,
+        idioma="es",
+    )
+
+    assert resultado_ingles == ["HOUSE"]
+    assert resultado_espanol == ["HOUSE", "NIÑOS"]
+    
 def test_carga_palabras_unicas(tmp_path):
     archivo = tmp_path / "palabras.txt"
 

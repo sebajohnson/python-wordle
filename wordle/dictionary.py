@@ -1,9 +1,13 @@
 from collections.abc import Iterable
 from pathlib import Path
 
-from wordle.text import normalizar, validar_caracteres
+from wordle.text import (
+    IDIOMA_PREDETERMINADO,
+    normalizar,
+    validar_caracteres,
+)
 
-def preparar_palabras(candidatas: Iterable[str]) -> list[str]:
+def preparar_palabras(candidatas: Iterable[str],idioma: str = IDIOMA_PREDETERMINADO,) -> list[str]:
     palabras = []
     palabras_vistas = set()
 
@@ -14,7 +18,7 @@ def preparar_palabras(candidatas: Iterable[str]) -> list[str]:
             continue
 
         try:
-            validar_caracteres(palabra)
+           validar_caracteres(palabra, idioma=idioma)
         except ValueError:
             continue
 
@@ -27,7 +31,13 @@ def preparar_palabras(candidatas: Iterable[str]) -> list[str]:
     return palabras
 
 
-def cargar_palabras(ruta: str | Path) -> list[str]:
+def cargar_palabras(
+    ruta: str | Path,
+    idioma: str = IDIOMA_PREDETERMINADO,
+) -> list[str]:
     contenido = Path(ruta).read_text(encoding="utf-8")
 
-    return preparar_palabras(contenido.splitlines())
+    return preparar_palabras(
+        contenido.splitlines(),
+        idioma=idioma,
+    )
